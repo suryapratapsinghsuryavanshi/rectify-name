@@ -4,7 +4,7 @@
   "description": "A simple npm package rectifies all file names according to provided case extension.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/suryapratapsinghsuryavanshi/rectify-name/issues"
   },
-  "homepage": "https://github.com/suryapratapsinghsuryavanshi/rectify-name#readme"
+  "homepage": "https://github.com/suryapratapsinghsuryavanshi/rectify-name#readme",
+  "devDependencies": {
+    "jest": "^27.4.7"
+  },
+  "dependencies": {
+    "solverjs": "^3.32.1"
+  }
 }
