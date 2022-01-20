@@ -1,0 +1,20 @@
+{
+  "name": "rectify-name",
+  "version": "1.0.0",
+  "description": "A simple npm package rectifies all file names according to provided case extension.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suryapratapsinghsuryavanshi/rectify-name.git"
+  },
+  "keywords": [],
+  "author": "Suryapratap Singh Suryavanshi <suryprtaps@gmail.com> (https://github.com/suryapratapsinghsuryavanshi)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/suryapratapsinghsuryavanshi/rectify-name/issues"
+  },
+  "homepage": "https://github.com/suryapratapsinghsuryavanshi/rectify-name#readme"
+}
