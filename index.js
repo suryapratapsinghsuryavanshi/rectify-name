@@ -14,7 +14,9 @@ function ignoreFiles(file) {
 		file.includes(".vscode") ||
         file.includes(".yml") ||
 		file.includes(".md") ||
-		file.includes("LICENSE")
+		file.includes("LICENSE") ||
+		file.includes(".d.") ||
+		file.includes(".test.")
 	);
 }
 
