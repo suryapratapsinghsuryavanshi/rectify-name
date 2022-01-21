@@ -22,5 +22,8 @@
   },
   "dependencies": {
     "solverjs": "^3.32.1"
+  },
+  "bin": {
+    "rectify-name": "./index.js"
   }
 }
