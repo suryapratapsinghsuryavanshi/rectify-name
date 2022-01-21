@@ -9,4 +9,4 @@ rectifyName("./", "camelCase");
 ```
 */
 type CaseType = "camelCase" | "snakeCase" | "kebabCase" | "pascalCase";
-export default function getAllFileName(path: string, caseType: CaseType): void;
+export function getAllFileName(path: string, caseType: CaseType): void;
