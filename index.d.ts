@@ -1,12 +1,11 @@
+
 /**
+ * A method that rectifies file name convert all file names into the lowercase.
+ * @param fileNameArray string[] a string array of filenames
+ * @returns string[] a string array of rectified filenames
+ */
+export function renameFile(fileNameArray: string[]): string[];
 
-@exmaple
-```javascript
-const rectifyName = require('rectify-name');
+export function ignoreFiles(fileName: string): boolean;
 
-rectifyName("./", "camelCase");
-// All the file name convert to the camelCase.
-```
-*/
-type CaseType = "camelCase" | "snakeCase" | "kebabCase" | "pascalCase";
-export function getAllFileName(path: string, caseType: CaseType): void;
+export function getFileName(fileName: string): [name: string, ext: string];

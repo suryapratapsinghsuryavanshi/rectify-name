@@ -22,18 +22,30 @@ function getFileName(file) {
 }
 
 // final file name, rename method.
-
 function renameFile(fileNameArray) {
+	let rectifiedFileNameArray = [];
 	fileNameArray.map(file => {
 		// rename files
 		if(!ignoreFiles(file)) {
 			let [fName, fExt] = getFileName(file);
 			fs.renameSync(`./${fName}.${fExt}`, `./${fName.toLowerCase()}.${fExt}`);
+			rectifiedFileNameArray.push(`${fName.toLowerCase()}.${fExt}`);
 		}
 	});
+	return rectifiedFileNameArray;
 }
 
 // Getting all current directory files.
-fileNameArray = fs.readdirSync("./", { encoding: 'utf8' });
+let fileNameArray;
+if(require("./package.json").diff) {
+	fileNameArray = fs.readdirSync("./", { encoding: 'utf8' });
+}else {
+	fileNameArray = [];
+}
 
 renameFile(fileNameArray);
+
+module.exports = {
+	ignoreFiles,
+	getFileName
+}
