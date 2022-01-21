@@ -25,6 +25,5 @@
   },
   "bin": {
     "rectify-name": "./index.js"
-  },
-  "diff": false
+  }
 }

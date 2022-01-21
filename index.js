@@ -12,7 +12,9 @@ function ignoreFiles(file) {
 		file.includes(".DS_Store") ||
 		file.includes(".idea") ||
 		file.includes(".vscode") ||
-        file.includes(".yml")
+        file.includes(".yml") ||
+		file.includes(".md") ||
+		file.includes("LICENSE")
 	);
 }
 
@@ -36,12 +38,7 @@ function renameFile(fileNameArray) {
 }
 
 // Getting all current directory files.
-let fileNameArray;
-if(require("./package.json").diff) {
-	fileNameArray = fs.readdirSync("./", { encoding: 'utf8' });
-}else {
-	fileNameArray = [];
-}
+let fileNameArray = fs.readdirSync("./", { encoding: 'utf8' });
 
 renameFile(fileNameArray);
 
