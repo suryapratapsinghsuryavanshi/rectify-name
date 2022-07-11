@@ -21,7 +21,7 @@
     "jest": "^27.4.7"
   },
   "dependencies": {
-    "solverjs": "^3.32.1"
+    "case-shift": "^2.5.3"
   },
   "bin": {
     "rectify-name": "./index.js"
