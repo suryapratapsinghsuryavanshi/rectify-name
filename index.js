@@ -124,7 +124,7 @@ function processArgs() {
 							console.log(`If you specify a -d or --directory option, must specify the path!\n`);
 							process.exit(1);
 						}else {
-							console.log(`${args[1] ?? "Invalid"}, directory not exists!\n`);
+							console.log(`${args[1] !== undefined ? "Invalid" : args[1]}, directory not exists!\n`);
 							process.exit(1);
 						}
 					}
@@ -142,7 +142,7 @@ function processArgs() {
 									console.log(`If you specify a -d or --directory option, must specify the path!\n`);
 									process.exit(1);
 								}else {
-									console.log(`${args[3] ?? "Invalid"}, directory not exists!\n`);
+									console.log(`${args[3] !== undefined ? "Invalid" : args[3]}, directory not exists!\n`);
 									process.exit(1);
 								}
 							}
