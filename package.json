@@ -1,6 +1,6 @@
 {
   "name": "rectify-name",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "A simple npm package rectifies all file names according to provided case extension.",
   "main": "index.js",
   "scripts": {
@@ -11,11 +11,11 @@
     "url": "git+https://github.com/suryapratapsinghsuryavanshi/rectify-name.git"
   },
   "keywords": [
-	  "rectify-name",
-	  "rectifyjs",
-	  "rectify-namejs",
-	  "rectify-file",
-	  "rectify-name npm"
+    "rectify-name",
+    "rectifyjs",
+    "rectify-namejs",
+    "rectify-file",
+    "rectify-name npm"
   ],
   "author": "Suryapratap Singh Suryavanshi <suryprtaps@gmail.com> (https://github.com/suryapratapsinghsuryavanshi)",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "rectify-name": "./index.js"
   },
   "files": [
-	  "index.js",
-	  "index.d.ts"
+    "index.js",
+    "index.d.ts"
   ]
 }
