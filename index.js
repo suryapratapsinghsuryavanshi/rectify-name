@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
+const { existsSync, readdirSync, renameSync } = require("fs");
+const { join } = require('path');
 const pkgJson = require("./package.json");
 const caseShift = require("case-shift");
 
@@ -94,6 +95,12 @@ function caseDetect(case_type) {
 			if((lowerToUpperTrans.length >= 1) && (firstLaterCap.length >= 1)) {
 				return "pascal-case";
 			}
+		}else if(firstLaterCap !== null) {
+			let upperToLowerTrans = case_type.match(/([A-Z][a-z])/g);
+			if(upperToLowerTrans !== null && upperToLowerTrans.length >= 1) {
+				// it was a confilit(it may we camel-case or pascal-case also) so we resolve it as pascal-case.
+				return "pascal-case";
+			}
 		}
 	}
 
@@ -103,14 +110,14 @@ function caseDetect(case_type) {
 		if(separatorSymbol !== null) {
 			if(separatorSymbol.length >= 1 && case_type === caseTransition) {
 				return "constant-case";
-			}else if(separatorSymbol.length >= 1 && case_type === case_type.toLowerCase()) {
+			}else if(separatorSymbol.length >= 1) {
 				return "snake-case";
 			}
 		}
 
-		[ separatorSymbol, caseTransition ] = [ case_type.match(/([-])/g), case_type.toLowerCase() ];
+		separatorSymbol = case_type.match(/([-])/g);
 		if(separatorSymbol !== null) {
-			if(separatorSymbol.length >= 1 && case_type === caseTransition) {
+			if(separatorSymbol.length >= 1) {
 				return "kebab-case";
 			}
 		}
@@ -127,6 +134,15 @@ function caseDetect(case_type) {
 		}
 	}
 
+	// only lower case.
+	if(case_type === case_type.toLowerCase()) {
+		return "lower-case";
+	}
+
+	// only CONSTANT_CASE if without _ include.
+	if(case_type === case_type.toUpperCase()) {
+		return "constant-case";
+	}
 }
 
 const finalConfig = {
@@ -163,7 +179,7 @@ function processArgs() {
 					break;
 				case "-d":
 				case "--directory":
-					let dir = fs.existsSync(args[1]);
+					let dir = existsSync(args[1]);
 					if(dir) {
 						finalConfig.dir = args[1];
 						if(args[2] === "-c" || args[2] === "--case") {
@@ -194,7 +210,7 @@ function processArgs() {
 					if(args.length >= 2 && (!(args[1].startsWith("--") || args[1].startsWith("-")) && caseType.includes(args[1]))) {
 						finalConfig.case = args[1];
 						if(args[2] === "-d" || args[2] === "--directory") {
-							let dir = fs.existsSync(args[3]);
+							let dir = existsSync(args[3]);
 							if(dir) {
 								finalConfig.dir = args[3];
 							}else {
@@ -221,10 +237,10 @@ function processArgs() {
 			}
 
 			// Getting all current directory files.
-			let fileNameArray = fs.readdirSync(finalConfig.dir, { encoding: "utf8" });
+			let fileNameArray = readdirSync(finalConfig.dir, { encoding: "utf8" });
 			// rename the file according to the above parameters.
-			renameFile(finalConfig, fileNameArray);
-
+			let renamedAndActualFiles =  renameFile(finalConfig, fileNameArray);
+			reflectRenameOnSystem(finalConfig.dir, renamedAndActualFiles);
 		}else {
 			console.log(help());
 		}
@@ -235,7 +251,15 @@ function processArgs() {
 	}
 }
 
+// pass all the filenames to the renameFile method they take care about what file we will ignore or what are eligible to rectify.
 // final file name, rename method.
+/**
+ * A method that rectifies file name convert all file names into other case file name type according to given options.
+ * @param options {{ dir: string, case: [ "lower-case", "camel-case",  "capital-case", "constant-case" "kebab-case", "pascal-case", "snake-case" ], caps: boolean }} object contain directory path, types of case and capitalization options.
+ * @param fileNameArray {string[]} a string array of filenames
+ * @returns {{ actualFiles: string[], renamedFiles: string[] }} a object containe `actual file` names and `rectifies file` name you can apply these
+ * hanges with the help of `reflectRenameOnSystem` method.
+ */
 function renameFile(options, fileNameArray) {
 
 	let rectifiedFileNames = {
@@ -343,7 +367,7 @@ function renameFile(options, fileNameArray) {
 							nFName = caseShift.snakeToKebab(nFName, options.caps);
 							break;
 						case KEBAB_CASE:
-							nFName = caseShift.constantToKebab(nFName, options.caps);
+							nFName = caseShift.constantToKebab(nFName.replace(/-/g, "_"), options.caps);
 							break;
 						case LOWER_CASE:
 							nFName = caseShift.constantToKebab(nFName.replace(/ /g, "_"), options.caps);
@@ -401,6 +425,13 @@ function renameFile(options, fileNameArray) {
 					}
 					break;
 				case LOWER_CASE:
+					nFName = nFName.replace(/[\s_-]/g, " ")
+					const nFNameCaseTrans = nFName.match(/([a-z][A-Z])/g);
+					if(nFNameCaseTrans !== null && nFNameCaseTrans.length >= 1) {
+						for(let ele of nFNameCaseTrans) {
+							nFName = nFName.replace(ele, ele.split("").join(" "));
+						}
+					}
 					nFName = nFName.toLowerCase();
 					break;
 			}
@@ -408,16 +439,32 @@ function renameFile(options, fileNameArray) {
 			rectifiedFileNames.renamedFiles.push(`${nFName}.${fExt}`);
 		}
 	});
-	console.log(rectifiedFileNames);
 	return rectifiedFileNames;
 }
 
-// pass all the filenames to the renameFile method they take care about what file we will ignore or what are eligible to rectify.
-// renameFile(fileNameArray);
+/**
+ * A method to reflect the file rectification on the system.
+ * @param dir {string} directory path
+ * @param param1 {{ actualFiles: string[], renamedFiles: string[] }} actual and rectifies file names array.
+ * @returns {never} Return nothing.
+ */
+function reflectRenameOnSystem(dir, { actualFiles, renamedFiles }) {
+	if(actualFiles !== undefined && renameFile !== undefined) {
+		for(let i = 0; i < actualFiles.length; ++i) {
+			try {
+				renameSync(join(dir, actualFiles[i]), join(dir, renamedFiles[i]));
+			}catch(e) {
+				console.log("Error: ", e);
+			}
+		}
+	}
+}
+
 processArgs();
 
 module.exports = {
-	ignoreFiles,
 	getFileName,
-	renameFile
+	ignoreFiles,
+	renameFile,
+	reflectRenameOnSystem
 }
