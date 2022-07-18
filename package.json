@@ -4,8 +4,7 @@
   "description": "A simple npm package rectifies all file names according to provided case extension.",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-	"formate": "prettier --write \"./**/*.{js,json}\""
+    "test": "jest"
   },
   "repository": {
     "type": "git",
